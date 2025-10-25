@@ -3,9 +3,18 @@
 ## Overview
 MinerU is an advanced PDF/document processing tool optimized for extracting text, tables, and layout from complex documents. This deployment is configured for Nibi's H100 GPUs.
 
+**Official Repository**: https://github.com/opendatalab/MinerU
+**Documentation**: https://mineru.net/
+
 **Primary Use Case**: British Library newspaper collection (600 image gold standard) and other historical published documents.
 
 **Note**: MinerU is optimized for printed/published documents. It does NOT work well on handwriting.
+
+## Installation Method
+
+This deployment uses the **official OpenDataLab MinerU** package:
+- **Package**: `mineru[core]` (installed via `uv pip install`)
+- **Command**: `mineru` (NOT `magic-pdf` - that's an outdated fork)
 
 ## Prerequisites
 
@@ -110,13 +119,13 @@ sbatch batch_mineru.sh
 
 ### Basic Usage
 ```bash
-apptainer exec --nv mineru.sif magic-pdf -p <input> -o <output> -m <mode>
+apptainer exec --nv mineru.sif mineru -p <input> -o <output>
 ```
 
-### Modes
-- `auto`: Automatic detection (recommended)
-- `txt`: Text extraction only
-- `ocr`: Force OCR processing
+### Command Options
+- `-p, --path`: Input file path (PDF or image)
+- `-o, --output`: Output directory path
+- Models download automatically on first run
 
 ### Example Commands
 
@@ -126,7 +135,7 @@ apptainer exec --nv \
     --bind ~/bl_goldstandard:/input:ro \
     --bind ~/output:/output \
     ~/projects/def-jic823/mineru/mineru.sif \
-    magic-pdf -p /input/image001.jpg -o /output/result -m auto
+    mineru -p /input/image001.jpg -o /output/result
 ```
 
 #### Single PDF
@@ -135,7 +144,7 @@ apptainer exec --nv \
     --bind ~/pdfs:/input:ro \
     --bind ~/output:/output \
     ~/projects/def-jic823/mineru/mineru.sif \
-    magic-pdf -p /input/document.pdf -o /output/result -m auto
+    mineru -p /input/document.pdf -o /output/result
 ```
 
 ## Monitoring Jobs
@@ -168,6 +177,7 @@ Compare MinerU results with OLMoCR to determine best tool for your use case.
 - Check disk space: `df -h ~/projects/def-jic823/`
 - Check build log: `cat build_mineru_*.err`
 - Verify Apptainer version: `apptainer --version`
+- Note: First build may take 30-60 minutes (downloads PyTorch + models)
 
 ### Out of Memory Errors
 - Reduce batch size in script

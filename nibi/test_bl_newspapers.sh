@@ -82,7 +82,7 @@ while IFS= read -r img_path; do
         --bind "${IMAGE_DIR}:/input:ro" \
         --bind "${OUTPUT_DIR}:/output" \
         "${CONTAINER}" \
-        magic-pdf -p "/input/${img_name}" -o "/output/${img_base}" -m auto \
+        mineru -p "/input/${img_name}" -o "/output/${img_base}" \
         > "${LOG_DIR}/${img_base}.log" 2>&1
 
     EXIT_CODE=$?

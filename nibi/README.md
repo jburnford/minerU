@@ -2,6 +2,9 @@
 
 This directory contains Nibi cluster-specific deployment files for MinerU.
 
+**Official MinerU**: https://github.com/opendatalab/MinerU
+**Package**: `mineru[core]` | **Command**: `mineru`
+
 ## Quick Deploy
 
 ### 1. On Nibi - Clone and Build

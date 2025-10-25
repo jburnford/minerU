@@ -58,7 +58,7 @@ apptainer exec --nv \
     --bind "${PDF_DIR}:/input:ro" \
     --bind "${OUTPUT_DIR}:/output" \
     "${CONTAINER}" \
-    magic-pdf -p "/input/${TEST_PDF}" -o /output -m auto
+    mineru -p "/input/${TEST_PDF}" -o /output
 
 EXIT_CODE=$?
 END_TIME=$(date +%s)

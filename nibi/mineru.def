@@ -16,7 +16,7 @@ From: nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04
     export INPUT_PATH=/workspace/input
     export OUTPUT_PATH=/workspace/output
     export NUM_WORKERS=16
-    export MINERU_CMD=magic-pdf
+    export MINERU_CMD=mineru
 
 %post
     # Update system packages
@@ -37,31 +37,31 @@ From: nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04
     # Install ONNX Runtime GPU (optional, for some pipelines)
     pip3 install onnx onnxruntime-gpu==1.18.0 || true
 
-    # Install MinerU and dependencies
-    pip3 install numpy Pillow opencv-python-headless PyYAML requests rich typer
-    pip3 install pytesseract pdf2image
+    # Install uv for faster package management (official MinerU recommendation)
+    pip3 install uv
 
-    # Install MinerU from source
-    pip3 install magic-pdf[full] --extra-index-url https://wheels.myhloli.com
+    # Install MinerU using official method
+    uv pip install --system -U "mineru[core]"
 
     # Create workspace directories
     mkdir -p /workspace/input /workspace/output
 
 %runscript
-    exec python3 -c "import sys; print('MinerU container ready. Use magic-pdf command to process documents.')"
+    exec python3 -c "import sys; print('MinerU container ready. Use mineru command to process documents.')"
 
 %labels
     Author jic823
-    Version 1.0
-    Description MinerU OCR container for Nibi H100 cluster
+    Version 2.0
+    Description MinerU container for Nibi H100 cluster (official opendatalab version)
 
 %help
-    This container provides MinerU (magic-pdf) for advanced PDF/document processing.
+    This container provides MinerU for advanced PDF/document processing.
+    Official repository: https://github.com/opendatalab/MinerU
 
     Usage:
-        apptainer exec --nv mineru.sif magic-pdf [options]
+        apptainer exec --nv mineru.sif mineru [options]
 
     Example:
-        apptainer exec --nv mineru.sif magic-pdf \
+        apptainer exec --nv mineru.sif mineru \
             -p /path/to/input.pdf \
             -o /path/to/output

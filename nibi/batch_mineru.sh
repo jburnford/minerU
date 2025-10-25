@@ -75,7 +75,7 @@ while IFS= read -r pdf_path; do
         --bind "${PDF_DIR}:/input:ro" \
         --bind "${OUTPUT_DIR}:/output" \
         "${CONTAINER}" \
-        magic-pdf -p "/input/${pdf_name}" -o "/output/${pdf_base}" -m auto \
+        mineru -p "/input/${pdf_name}" -o "/output/${pdf_base}" \
         > "${LOG_DIR}/${pdf_base}.log" 2>&1
 
     EXIT_CODE=$?
