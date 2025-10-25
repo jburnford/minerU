@@ -1,0 +1,67 @@
+Bootstrap: docker
+From: nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04
+
+%environment
+    export DEBIAN_FRONTEND=noninteractive
+    export TZ=UTC
+    export PIP_NO_CACHE_DIR=1
+    export CMAKE_BUILD_PARALLEL_LEVEL=8
+    export TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0"
+    export CUDA_HOME=/usr/local/cuda
+    export FORCE_CUDA=1
+    export PATH=/usr/local/cuda/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
+    # Default I/O locations (configurable via env)
+    export INPUT_PATH=/workspace/input
+    export OUTPUT_PATH=/workspace/output
+    export NUM_WORKERS=16
+    export MINERU_CMD=magic-pdf
+
+%post
+    # Update system packages
+    apt-get update && apt-get install -y --no-install-recommends \
+        git curl ca-certificates wget build-essential pkg-config \
+        python3 python3-pip python3-venv python3-dev \
+        tesseract-ocr tesseract-ocr-eng libtesseract-dev \
+        poppler-utils ghostscript \
+        libgl1 libglib2.0-0 \
+        fonts-dejavu-core \
+        && rm -rf /var/lib/apt/lists/*
+
+    # Install PyTorch CUDA build (12.1 wheels)
+    pip3 install --upgrade pip setuptools wheel
+    pip3 install --extra-index-url https://download.pytorch.org/whl/cu121 \
+        torch torchvision torchaudio
+
+    # Install ONNX Runtime GPU (optional, for some pipelines)
+    pip3 install onnx onnxruntime-gpu==1.18.0 || true
+
+    # Install MinerU and dependencies
+    pip3 install numpy Pillow opencv-python-headless PyYAML requests rich typer
+    pip3 install pytesseract pdf2image
+
+    # Install MinerU from source
+    pip3 install magic-pdf[full] --extra-index-url https://wheels.myhloli.com
+
+    # Create workspace directories
+    mkdir -p /workspace/input /workspace/output
+
+%runscript
+    exec python3 -c "import sys; print('MinerU container ready. Use magic-pdf command to process documents.')"
+
+%labels
+    Author jic823
+    Version 1.0
+    Description MinerU OCR container for Nibi H100 cluster
+
+%help
+    This container provides MinerU (magic-pdf) for advanced PDF/document processing.
+
+    Usage:
+        apptainer exec --nv mineru.sif magic-pdf [options]
+
+    Example:
+        apptainer exec --nv mineru.sif magic-pdf \
+            -p /path/to/input.pdf \
+            -o /path/to/output
