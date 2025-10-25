@@ -13,9 +13,13 @@
 
 set -euo pipefail
 
+# Load Apptainer module
+module load apptainer/1.3.5
+
 echo "Building MinerU Apptainer container..."
 echo "Job ID: $SLURM_JOB_ID"
 echo "Node: $(hostname)"
+echo "Apptainer version: $(apptainer --version)"
 echo "Start time: $(date)"
 
 # Ensure output directory exists
