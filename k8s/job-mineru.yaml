@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mineru-job
+spec:
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        app: mineru
+    spec:
+      restartPolicy: Never
+      # If your cluster uses a runtime class for GPU
+      # runtimeClassName: nvidia
+      containers:
+        - name: mineru
+          image: ghcr.io/your-org/mineru-nibi:latest # change to your registry
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: INPUT_PATH
+              value: /workspace/input
+            - name: OUTPUT_PATH
+              value: /workspace/output
+            - name: NUM_WORKERS
+              value: "32"
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+              cpu: "16"
+              memory: "200Gi"
+            requests:
+              nvidia.com/gpu: 1
+              cpu: "8"
+              memory: "64Gi"
+          volumeMounts:
+            - name: mineru-data
+              mountPath: /workspace
+      volumes:
+        - name: mineru-data
+          persistentVolumeClaim:
+            claimName: mineru-data-pvc
+

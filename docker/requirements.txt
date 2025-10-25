@@ -1,0 +1,16 @@
+# Core
+numpy
+Pillow
+opencv-python-headless
+PyYAML
+requests
+rich
+typer
+
+# OCR and PDF utilities (python side)
+pytesseract
+pdf2image
+
+# MinerU (install from Git)
+git+https://github.com/opendatalab/mineru.git
+

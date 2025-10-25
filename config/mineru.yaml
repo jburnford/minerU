@@ -1,0 +1,18 @@
+# Placeholder for MinerU advanced configuration.
+# Tune models, batch sizes, OCR languages, and runtime accelerators here.
+
+# Example (adjust based on MinerU's actual config schema):
+# runtime:
+#   device: cuda
+#   precision: bf16
+#   num_workers: 16
+#   batch_pages: 8
+# ocr:
+#   engine: tesseract
+#   languages: [eng]
+# layout:
+#   model: large
+#   fp16: true
+# tables:
+#   enable: true
+
