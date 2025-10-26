@@ -8,7 +8,7 @@ From: nvidia/cuda:12.1.1-cudnn8-devel-rockylinux9
     export TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0"
     export CUDA_HOME=/usr/local/cuda
     export FORCE_CUDA=1
-    export PATH=/usr/local/cuda/bin:$PATH
+    export PATH=/root/.local/bin:/usr/local/cuda/bin:$PATH
     export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
     # Default I/O locations (configurable via env)
@@ -42,11 +42,14 @@ From: nvidia/cuda:12.1.1-cudnn8-devel-rockylinux9
     # Install ONNX Runtime GPU (optional, for some pipelines)
     python3 -m pip install onnx onnxruntime-gpu==1.18.0 || true
 
-    # Install uv for faster package management (official MinerU recommendation)
-    python3 -m pip install uv
+    # Install uv using official standalone installer (official MinerU recommendation)
+    curl -LsSf https://astral.sh/uv/install.sh | sh
 
-    # Install MinerU using official method
-    python3 -m uv pip install --system -U "mineru[core]"
+    # Add uv to PATH for this build session
+    export PATH="/root/.local/bin:$PATH"
+
+    # Install MinerU using uv (official method)
+    uv pip install --system -U "mineru[core]"
 
     # Create workspace directories
     mkdir -p /workspace/input /workspace/output
