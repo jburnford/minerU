@@ -14,6 +14,9 @@
 
 set -euo pipefail
 
+# Load Apptainer module
+module load apptainer/1.3.5
+
 echo "========================================="
 echo "MinerU Test Job"
 echo "========================================="
