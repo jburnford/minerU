@@ -23,11 +23,14 @@ From: nvidia/cuda:12.1.1-cudnn8-devel-rockylinux9
     dnf install -y \
         git curl ca-certificates wget gcc gcc-c++ make pkgconfig \
         python3 python3-pip python3-devel \
-        tesseract tesseract-langpack-eng tesseract-devel \
+        tesseract tesseract-langpack-eng \
         poppler-utils ghostscript \
         mesa-libGL mesa-libGL-devel glib2 glib2-devel \
         google-noto-sans-fonts \
         && dnf clean all
+
+    # Verify pip3 is available
+    which pip3 || (echo "ERROR: pip3 not found after python3-pip install" && exit 1)
 
     # Install PyTorch CUDA build (12.1 wheels)
     pip3 install --upgrade pip setuptools wheel
